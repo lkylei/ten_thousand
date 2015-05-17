@@ -855,4 +855,32 @@ void HELPER(inst_count)(CPUARMState *env)
 
 void HELPER(sync_point)(CPUARMState *env)
 {
+    CPUState* cpu_self = CPU(arm_env_get_cpu(env));
+    uint32_t det_time_self = cpu_self->det_time;
+    int host_tid_self = cpu_self->host_tid;
+
+    while(1)
+    {
+        CPUState* cpu_tmp;
+        fprintf(stderr, "[%s] self %d\n", __func__, host_tid_self);
+        int is_still_waiting = 0;
+        CPU_FOREACH(cpu_tmp)
+        {
+            fprintf(stderr, "t[%d] %u %d\n",
+                    cpu_tmp->host_tid,
+                    cpu_tmp->det_time,
+                    cpu_tmp->running);
+            if (1 == cpu_tmp->running && 
+                host_tid_self != cpu_tmp->host_tid)
+            {
+                if (cpu_tmp->det_time <= det_time_self)
+                {
+                    is_still_waiting = 1;
+//                    break;
+                }
+            }
+        }
+        if (0 == is_still_waiting)
+            break;
+    }
 }
