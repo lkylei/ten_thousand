@@ -345,6 +345,7 @@ typedef struct CPUARMState {
 
     void *nvic;
     const struct arm_boot_info *boot_info;
+	uint32_t det_icount;
 } CPUARMState;
 
 #include "cpu-qom.h"

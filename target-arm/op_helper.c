@@ -840,3 +840,8 @@ uint32_t HELPER(ror_cc)(CPUARMState *env, uint32_t x, uint32_t i)
         return ((uint32_t)x >> shift) | (x << (32 - shift));
     }
 }
+
+void HELPER(inst_count)(CPUARMState *env)
+{
+	env->det_icount++;
+}
