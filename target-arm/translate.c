@@ -11199,7 +11199,7 @@ static inline void gen_intermediate_code_internal(ARMCPU *cpu,
             unsigned int insn = arm_ldl_code(env, dc->pc, dc->bswap_code);
             dc->pc += 4;
             disas_arm_insn(dc, insn);
-			gen_helper_inst_count(env);
+			gen_helper_inst_count(cpu_env);
         }
 
         if (dc->condjmp && !dc->is_jmp) {

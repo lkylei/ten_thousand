@@ -844,4 +844,5 @@ uint32_t HELPER(ror_cc)(CPUARMState *env, uint32_t x, uint32_t i)
 void HELPER(inst_count)(CPUARMState *env)
 {
 	env->det_icount++;
+//    fprintf(stderr, "[inst_count]%u\n", env->det_icount);
 }
