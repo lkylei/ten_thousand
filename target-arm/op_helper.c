@@ -24,6 +24,8 @@
 #define SIGNBIT (uint32_t)0x80000000
 #define SIGNBIT64 ((uint64_t)1 << 63)
 
+//#define DEBUG_DET
+
 static void raise_exception(CPUARMState *env, int tt)
 {
     ARMCPU *cpu = arm_env_get_cpu(env);
@@ -843,11 +845,14 @@ uint32_t HELPER(ror_cc)(CPUARMState *env, uint32_t x, uint32_t i)
 
 void HELPER(inst_count)(CPUARMState *env)
 {
-	env->det_icount++;
-//    fprintf(stderr, "[inst_count]%u\n", env->det_icount);
+    CPUState *cs = CPU(arm_env_get_cpu(env));
+    cs->det_time++;
+#if defined(DEBUG_DET)
+    fprintf(stderr, "thread[%d] det_time %u\n", 
+            cs->host_tid, cs->det_time);
+#endif
 }
 
 void HELPER(sync_point)(CPUARMState *env)
 {
-
 }

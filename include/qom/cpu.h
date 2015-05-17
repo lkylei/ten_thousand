@@ -300,6 +300,8 @@ struct CPUState {
        (absolute value) offset as small as possible.  This reduces code
        size, especially for hosts without large memory offsets.  */
     volatile sig_atomic_t tcg_exit_req;
+
+    uint32_t det_time;
 };
 
 QTAILQ_HEAD(CPUTailQ, CPUState);
