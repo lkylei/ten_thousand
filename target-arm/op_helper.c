@@ -846,3 +846,8 @@ void HELPER(inst_count)(CPUARMState *env)
 	env->det_icount++;
 //    fprintf(stderr, "[inst_count]%u\n", env->det_icount);
 }
+
+void HELPER(sync_point)(CPUARMState *env)
+{
+
+}

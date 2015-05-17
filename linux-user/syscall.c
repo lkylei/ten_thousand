@@ -4501,6 +4501,11 @@ static int do_fork(CPUArchState *env, unsigned int flags, abi_ulong newsp,
         nptl_flags = flags;
         flags &= ~CLONE_NPTL_FLAGS2;
 
+        new_env->det_icount = env->det_icount;
+#if defined(DET_DEBUG)
+        fprintf(stderr, "[%s CLONE_VM] %u\n", __func__, new_env->det_icount);
+#endif
+
         if (nptl_flags & CLONE_CHILD_CLEARTID) {
             ts->child_tidptr = child_tidptr;
         }
