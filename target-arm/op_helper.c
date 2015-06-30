@@ -24,8 +24,6 @@
 #define SIGNBIT (uint32_t)0x80000000
 #define SIGNBIT64 ((uint64_t)1 << 63)
 
-//#define DEBUG_DET
-
 static void raise_exception(CPUARMState *env, int tt)
 {
     ARMCPU *cpu = arm_env_get_cpu(env);
@@ -840,47 +838,5 @@ uint32_t HELPER(ror_cc)(CPUARMState *env, uint32_t x, uint32_t i)
     } else {
         env->CF = (x >> (shift - 1)) & 1;
         return ((uint32_t)x >> shift) | (x << (32 - shift));
-    }
-}
-
-void HELPER(inst_count)(CPUARMState *env)
-{
-    CPUState *cs = CPU(arm_env_get_cpu(env));
-    cs->det_time++;
-#if defined(DEBUG_DET)
-    fprintf(stderr, "thread[%d] det_time %u\n", 
-            cs->host_tid, cs->det_time);
-#endif
-}
-
-void HELPER(sync_point)(CPUARMState *env)
-{
-    CPUState* cpu_self = CPU(arm_env_get_cpu(env));
-    uint32_t det_time_self = cpu_self->det_time;
-    int host_tid_self = cpu_self->host_tid;
-
-    while(1)
-    {
-        CPUState* cpu_tmp;
-        fprintf(stderr, "[%s] self %d\n", __func__, host_tid_self);
-        int is_still_waiting = 0;
-        CPU_FOREACH(cpu_tmp)
-        {
-            fprintf(stderr, "t[%d] %u %d\n",
-                    cpu_tmp->host_tid,
-                    cpu_tmp->det_time,
-                    cpu_tmp->running);
-            if (1 == cpu_tmp->running && 
-                host_tid_self != cpu_tmp->host_tid)
-            {
-                if (cpu_tmp->det_time <= det_time_self)
-                {
-                    is_still_waiting = 1;
-//                    break;
-                }
-            }
-        }
-        if (0 == is_still_waiting)
-            break;
     }
 }
