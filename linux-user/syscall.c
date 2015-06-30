@@ -4529,11 +4529,6 @@ static int do_fork(CPUArchState *env, unsigned int flags, abi_ulong newsp,
         sigfillset(&sigmask);
         sigprocmask(SIG_BLOCK, &sigmask, &info.sigmask);
 
-        new_cpu->det_time = cpu->det_time;
-#if defined(DEBUG_DET)
-        fprintf(stderr, "[post-%s] parent %u child %u\n", 
-                __func__, cpu->det_time, new_cpu->det_time);
-#endif
         ret = pthread_create(&info.thread, &attr, clone_func, &info);
         /* TODO: Free new CPU state if thread creation failed.  */
 
